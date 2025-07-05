@@ -1,0 +1,42 @@
+{
+  "name": "valkream-updater-gui",
+  "productName": "Valkream Updater",
+  "version": "1.0.0",
+  "description": "GUI for Valheim game updater",
+  "main": "./src/app.js",
+  "author": "Valkream Team",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production electron .",
+    "dev": "cross-env NODE_ENV=development nodemon --exec electron .",
+    "start-watch": "electron .",
+    "build": "node build-script.js --obf=true --build=platform --icon=https://raw.githubusercontent.com/Jean-Chante/Valkream-Updater-GUI/main/src/assets/images/icon.png"
+  },
+  "license": "MIT",
+  "nodemonConfig": {
+    "ext": "js,html,css",
+    "ignore": "**/test"
+  },
+  "dependencies": {
+    "electron-updater": "^6.1.8",
+    "axios": "^1.10.0",
+    "node-bdd": "^2.0.4",
+    "node-fetch": "^2.7.0",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7",
+    "yaml": "^2.2.2",
+    "valkream-function-lib": "latest"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "electron": "^30.5.1",
+    "electron-builder": "^26.0.12",
+    "javascript-obfuscator": "^4.1.0",
+    "jimp": "^0.22.12",
+    "nodemon": "^3.1.2",
+    "png2icons": "^2.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jean-Chante/Valkream-Updater-GUI.git"
+  }
+}
