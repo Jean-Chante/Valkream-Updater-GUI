@@ -9,7 +9,7 @@
     "start": "cross-env NODE_ENV=production electron .",
     "dev": "cross-env NODE_ENV=development nodemon --exec electron .",
     "start-watch": "electron .",
-    "build": "node build-script.js --obf=true --build=platform"
+    "build": "node build-script.js --obf=true --build=platform --icon=https://raw.githubusercontent.com/Jean-Chante/Valkream-Updater-GUI/main/src/assets/images/icon.png"
   },
   "license": "MIT",
   "nodemonConfig": {
@@ -34,12 +34,6 @@
     "jimp": "^0.22.12",
     "nodemon": "^3.1.2",
     "png2icons": "^2.0.1"
-  },
-  "nsis": {
-    "oneClick": false,
-    "allowToChangeInstallationDirectory": true,
-    "createDesktopShortcut": true,
-    "createStartMenuShortcut": true
   },
   "repository": {
     "type": "git",

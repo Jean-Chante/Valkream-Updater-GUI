@@ -6,7 +6,7 @@ const nodeFetch = require("node-fetch");
 const png2icons = require("png2icons");
 const Jimp = require("jimp");
 
-const { preductname } = require("./package.json");
+const { productName } = require("./package.json");
 
 class Index {
   async init() {
@@ -30,18 +30,18 @@ class Index {
   }
 
   async Obfuscate() {
-    if (fs.existsSync("./app")) fs.rmSync("./app", { recursive: true });
+    if (fs.existsSync("./build")) fs.rmSync("./build", { recursive: true });
 
     for (let path of this.Fileslist) {
       let fileName = path.split("/").pop();
       let extFile = fileName.split(".").pop();
-      let folder = path.replace(`/${fileName}`, "").replace("src", "app");
+      let folder = path.replace(`/${fileName}`, "").replace("src", "build");
 
       if (!fs.existsSync(folder)) fs.mkdirSync(folder, { recursive: true });
 
       if (extFile == "js") {
         let code = fs.readFileSync(path, "utf8");
-        code = code.replace(/src\//g, "app/");
+        code = code.replace(/src\//g, "build/");
         if (this.obf) {
           await new Promise((resolve) => {
             console.log(`Obfuscate ${path}`);
@@ -75,12 +75,12 @@ class Index {
       .build({
         config: {
           generateUpdatesFilesForAllChannels: false,
-          appId: preductname,
-          productName: preductname,
+          appId: productName,
+          productName: productName,
           copyright: "Copyright © 2020-2024 Luuxis",
           artifactName: "${productName}-${os}-${arch}.${ext}",
-          extraMetadata: { main: "app/app.js" },
-          files: ["app/**/*", "package.json", "LICENSE.md"],
+          extraMetadata: { main: "build/app.js" },
+          files: ["build/**/*", "package.json", "LICENSE.md"],
           directories: { output: "dist" },
           compression: "maximum",
           asar: true,
@@ -91,7 +91,7 @@ class Index {
             },
           ],
           win: {
-            icon: "./app/assets/images/icon.ico",
+            icon: "./build/assets/images/icon.ico",
             target: [
               {
                 target: "nsis",
@@ -106,7 +106,7 @@ class Index {
             runAfterFinish: true,
           },
           mac: {
-            icon: "./app/assets/images/icon.icns",
+            icon: "./build/assets/images/icon.icns",
             category: "public.app-category.games",
             identity: null,
             target: [
@@ -121,7 +121,7 @@ class Index {
             ],
           },
           linux: {
-            icon: "./app/assets/images/icon.png",
+            icon: "./build/assets/images/icon.png",
             target: [
               {
                 target: "AppImage",
