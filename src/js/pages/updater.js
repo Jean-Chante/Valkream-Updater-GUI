@@ -1,10 +1,16 @@
 const { ipcRenderer } = require("electron");
 const { showSnackbar, changePage } = require("../utils/utils.js");
 
+const dev = process.env.NODE_ENV === "development";
+
 class Updater {
   static id = "updater";
 
   async init() {
+    if (dev) {
+      return;
+    }
+
     this.updateStatus = document.querySelector(".status-message");
     this.updateIcon = document.querySelector(".update-icon");
     this.progressContainer = document.querySelector(
