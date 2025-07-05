@@ -195,4 +195,4 @@ class Process {
   }
 }
 
-export default Process;
+module.exports = Process;

@@ -1,4 +1,5 @@
 const { ipcRenderer } = require("electron");
+const { formatBytes } = require("valkream-function-lib");
 
 class UpdateManager {
   constructor() {
@@ -100,7 +101,7 @@ class UpdateManager {
 
   showDownloadProgress(progressData) {
     const percent = Math.round(progressData.percent);
-    const speed = this.formatBytes(progressData.bytesPerSecond);
+    const speed = formatBytes(progressData.bytesPerSecond);
     const message = `Téléchargement: ${percent}% (${speed}/s)`;
     this.showUpdateStatus(message, "info");
 
@@ -172,14 +173,6 @@ class UpdateManager {
     } catch (error) {
       this.showUpdateStatus(`Erreur: ${error.message}`, "error");
     }
-  }
-
-  formatBytes(bytes) {
-    if (bytes === 0) return "0 B";
-    const k = 1024;
-    const sizes = ["B", "KB", "MB", "GB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   }
 
   updateUI() {

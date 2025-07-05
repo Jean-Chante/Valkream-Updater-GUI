@@ -1,11 +1,9 @@
 const { ipcRenderer } = require("electron");
 const path = require("path");
-import Process from "../utils/process.js";
-import { database, showSnackbar } from "../utils/utils.js";
+const { database, showSnackbar, Process } = require("../utils/utils.js");
 const fs = require("fs");
 const axios = require("axios");
 const yaml = require("yaml");
-const { formatBytes } = require("valkream-function-lib");
 
 class BuildGamePanel {
   static id = "build-game-panel";
@@ -361,4 +359,4 @@ class BuildGamePanel {
   }
 }
 
-export default BuildGamePanel;
+module.exports = BuildGamePanel;

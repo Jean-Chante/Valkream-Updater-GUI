@@ -1,7 +1,7 @@
 const fs = require("fs");
-import UploadGamePanel from "./panels/upload-game.js";
-import BuildGamePanel from "./panels/build-game.js";
-import PostGamePanel from "./panels/post-game.js";
+const BuildGamePanel = require("../panels/build-game.js");
+const PostGamePanel = require("../panels/post-game.js");
+const UploadGamePanel = require("../panels/upload-game.js");
 
 class HomeGameManager {
   init() {
@@ -15,10 +15,10 @@ class HomeGameManager {
   }
 
   initGamesPanels() {
-    for (let panel of fs.readdirSync(`${__dirname}/../html/panels/`)) {
+    for (let panel of fs.readdirSync(`${__dirname}/../../html/panels/`)) {
       if (panel.includes("game")) {
         const html = fs.readFileSync(
-          `${__dirname}/../html/panels/${panel}`,
+          `${__dirname}/../../html/panels/${panel}`,
           "utf8"
         );
         this.panels.innerHTML += html;
@@ -68,4 +68,4 @@ class HomeGameManager {
   }
 }
 
-export default HomeGameManager;
+module.exports = HomeGameManager;

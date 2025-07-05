@@ -3,21 +3,13 @@
   "productName": "Valkream Updater",
   "version": "1.0.0",
   "description": "GUI for Valheim game updater",
-  "main": "app.js",
+  "main": "./src/app.js",
   "author": "Valkream Team",
   "scripts": {
     "start": "cross-env NODE_ENV=production electron .",
     "dev": "cross-env NODE_ENV=development nodemon --exec electron .",
     "start-watch": "electron .",
-    "build": "electron-builder",
-    "build:win": "electron-builder --win",
-    "build:mac": "electron-builder --mac",
-    "build:linux": "electron-builder --linux",
-    "build:all": "electron-builder -mwl",
-    "publish": "electron-builder --publish=always",
-    "obfuscate": "javascript-obfuscator src/js --output dist/js --config obfuscator.config.json",
-    "build:obfuscated": "node build-script.js",
-    "build:obfuscated:publish": "node build-script.js --publish"
+    "build": "node build-script.js --obf=true --build=platform"
   },
   "license": "MIT",
   "nodemonConfig": {
@@ -25,100 +17,32 @@
     "ignore": "**/test"
   },
   "dependencies": {
+    "electron-updater": "^6.1.8",
     "axios": "^1.10.0",
-    "cross-env": "^7.0.3",
-    "electron": "30.5.1",
-    "electron-updater": "^6.6.2",
-    "form-data": "^4.0.3",
-    "fs": "^0.0.1-security",
-    "fs-extra": "^11.3.0",
     "node-bdd": "^2.0.4",
     "node-fetch": "^2.7.0",
+    "fs": "^0.0.1-security",
     "path": "^0.12.7",
-    "valkream-function-lib": "latest",
-    "yaml": "^2.2.2"
+    "yaml": "^2.2.2",
+    "valkream-function-lib": "latest"
   },
   "devDependencies": {
-    "electron-builder": "^25.1.8",
-    "javascript-obfuscator": "^4.1.1",
-    "nodemon": "^3.1.2"
+    "cross-env": "^7.0.3",
+    "electron": "^30.5.1",
+    "electron-builder": "^26.0.12",
+    "javascript-obfuscator": "^4.1.0",
+    "jimp": "^0.22.12",
+    "nodemon": "^3.1.2",
+    "png2icons": "^2.0.1"
   },
-  "build": {
-    "appId": "com.valkream.updater",
-    "productName": "Valkream Updater",
-    "directories": {
-      "output": "dist"
-    },
-    "files": [
-      "app.js",
-      "mainWindow.js",
-      "src/**/*",
-      "!data/**/*",
-      "!**/node_modules/**/*",
-      "!**/*.map"
-    ],
-    "extraResources": [
-      {
-        "from": "src/fonts",
-        "to": "fonts"
-      },
-      {
-        "from": "src/images",
-        "to": "images"
-      },
-      {
-        "from": "src/video",
-        "to": "video"
-      }
-    ],
-    "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        }
-      ],
-      "icon": "src/images/icon.png",
-      "publisherName": "Valkream Team"
-    },
-    "mac": {
-      "target": [
-        {
-          "target": "dmg",
-          "arch": [
-            "universal"
-          ]
-        }
-      ],
-      "icon": "src/images/icon.png",
-      "category": "public.app-category.utilities"
-    },
-    "linux": {
-      "target": [
-        {
-          "target": "AppImage",
-          "arch": [
-            "x64"
-          ]
-        }
-      ],
-      "icon": "src/images/icon.png",
-      "category": "Utility"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true
-    },
-    "publish": {
-      "provider": "github",
-      "owner": "Valkream",
-      "repo": "Valkream-Updater-GUI",
-      "private": false,
-      "releaseType": "release"
-    }
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jean-Chante/Valkream-Updater-GUI.git"
   }
 }

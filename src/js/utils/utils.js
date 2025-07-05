@@ -3,10 +3,11 @@
  * @license MIT - https://opensource.org/licenses/MIT
  */
 
-import hasInternetConnection from "./internet.js";
-import database from "./database.js";
-import logger from "./logger.js";
-import popup from "./popup.js";
+const hasInternetConnection = require("./internet.js");
+const database = require("./database.js");
+const logger = require("./logger.js");
+const popup = require("./popup.js");
+const Process = require("./process.js");
 
 async function changePage(id) {
   let panel = document.querySelector(`#${id}-page`);
@@ -27,11 +28,12 @@ function showSnackbar(message, type = "success", duration = 3000) {
   }, duration);
 }
 
-export {
-  changePage as changePage,
-  showSnackbar as showSnackbar,
-  hasInternetConnection as hasInternetConnection,
-  database as database,
-  logger as logger,
-  popup as popup,
+module.exports = {
+  changePage,
+  database,
+  hasInternetConnection,
+  logger,
+  popup,
+  showSnackbar,
+  Process,
 };

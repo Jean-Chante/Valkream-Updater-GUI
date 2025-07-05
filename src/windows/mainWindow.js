@@ -5,8 +5,7 @@
 
 const { app, BrowserWindow, Menu } = require("electron");
 const path = require("path");
-const pkg = require("./package.json");
-let dev = process.env.DEV_TOOL === "open";
+const dev = process.env.NODE_ENV === "development";
 let mainWindow = undefined;
 
 function getWindow() {
@@ -28,7 +27,7 @@ function createWindow() {
     minWidth: 980,
     minHeight: 552,
     resizable: true,
-    icon: path.join(app.getAppPath(), "/src/images/icon.png"),
+    icon: path.join(app.getAppPath(), "/src/assets/images/icon.png"),
     frame: false,
     show: false,
     webPreferences: {

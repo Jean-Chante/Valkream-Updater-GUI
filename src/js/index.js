@@ -6,17 +6,19 @@
 // import panel
 
 // import modules
-import Config from "./config.js";
-import Home from "./home.js";
-import UpdateManager from "./utils/update-manager.js";
+const UpdateManager = require("../js/manager/update-manager.js");
+const Config = require("../js/pages/config.js");
+const Home = require("../js/pages/home.js");
 
-import { changePage } from "./utils/utils.js";
+const { changePage } = require("../js/utils/utils.js");
 
 // libs
 const { ipcRenderer } = require("electron");
 const fs = require("fs");
 
-class UpdaterUI {
+const dev = process.env.NODE_ENV === "development";
+
+class UpdaterGUI {
   async init() {
     this.initFrame();
     this.createPages(Config, Home);
@@ -48,7 +50,10 @@ class UpdaterUI {
       let div = document.createElement("div");
       div.id = `${page.id}-page`;
       div.classList.add("page", page.id, "content-scroll");
-      div.innerHTML = fs.readFileSync(`${__dirname}/${page.id}.html`, "utf8");
+      div.innerHTML = fs.readFileSync(
+        `${__dirname}/../html/pages/${page.id}.html`,
+        "utf8"
+      );
       pagesElem.appendChild(div);
       new page().init(this.config);
     }
@@ -60,8 +65,8 @@ class UpdaterUI {
 
   initUpdateManager() {
     // Initialiser le gestionnaire de mise à jour
-    this.updateManager = new UpdateManager();
+    if (!dev) this.updateManager = new UpdateManager();
   }
 }
 
-new UpdaterUI().init();
+new UpdaterGUI().init();

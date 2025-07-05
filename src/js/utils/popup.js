@@ -5,7 +5,7 @@
 
 const { ipcRenderer } = require("electron");
 
-export default class popup {
+class popup {
   constructor() {
     this.popup = document.querySelector(".popup");
     this.popupTitle = document.querySelector(".popup-title");
@@ -39,3 +39,5 @@ export default class popup {
     this.popupOptions.style.display = "none";
   }
 }
+
+module.exports = popup;

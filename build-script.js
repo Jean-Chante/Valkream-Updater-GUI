@@ -1,185 +1,177 @@
-const { execSync } = require("child_process");
 const fs = require("fs");
-const path = require("path");
 
-class BuildScript {
-  constructor() {
-    this.distPath = path.join(__dirname, "dist");
-    this.srcJsPath = path.join(__dirname, "src", "js");
-    this.obfuscatedJsPath = path.join(this.distPath, "js");
-  }
+const builder = require("electron-builder");
+const JavaScriptObfuscator = require("javascript-obfuscator");
+const nodeFetch = require("node-fetch");
+const png2icons = require("png2icons");
+const Jimp = require("jimp");
 
-  async run() {
-    try {
-      console.log("🚀 Début du processus de build...");
+const { preductname } = require("./package.json");
 
-      // 1. Nettoyer le dossier dist
-      this.cleanDist();
-
-      // 2. Copier les fichiers nécessaires
-      this.copyFiles();
-
-      // 3. Obfusquer le code JavaScript
-      await this.obfuscateCode();
-
-      // 4. Construire l'application Electron
-      this.buildElectronApp();
-
-      // 5. Publier sur GitHub (optionnel)
-      if (process.argv.includes("--publish")) {
-        await this.publishToGitHub();
+class Index {
+  async init() {
+    this.obf = true;
+    this.Fileslist = [];
+    process.argv.forEach(async (val) => {
+      if (val.startsWith("--icon")) {
+        return this.iconSet(val.split("=")[1]);
       }
 
-      console.log("✅ Build terminé avec succès!");
-    } catch (error) {
-      console.error("❌ Erreur lors du build:", error);
-      process.exit(1);
-    }
-  }
-
-  cleanDist() {
-    console.log("🧹 Nettoyage du dossier dist...");
-    if (fs.existsSync(this.distPath)) {
-      fs.rmSync(this.distPath, { recursive: true, force: true });
-    }
-    fs.mkdirSync(this.distPath, { recursive: true });
-  }
-
-  copyFiles() {
-    console.log("📁 Copie des fichiers...");
-
-    // Copier les fichiers principaux
-    const filesToCopy = ["app.js", "mainWindow.js", "package.json"];
-
-    filesToCopy.forEach((file) => {
-      if (fs.existsSync(file)) {
-        fs.copyFileSync(file, path.join(this.distPath, file));
+      if (val.startsWith("--obf")) {
+        this.obf = JSON.parse(val.split("=")[1]);
+        this.Fileslist = this.getFiles("src");
       }
-    });
 
-    // Copier les ressources
-    const resourcesToCopy = [
-      { from: "src/html", to: "src/html" },
-      { from: "src/css", to: "src/css" },
-      { from: "src/fonts", to: "src/fonts" },
-      { from: "src/images", to: "src/images" },
-      { from: "src/video", to: "src/video" },
-      { from: "data", to: "data" },
-    ];
-
-    resourcesToCopy.forEach(({ from, to }) => {
-      const sourcePath = path.join(__dirname, from);
-      const destPath = path.join(this.distPath, to);
-
-      if (fs.existsSync(sourcePath)) {
-        this.copyDirectory(sourcePath, destPath);
+      if (val.startsWith("--build")) {
+        let buildType = val.split("=")[1];
+        if (buildType == "platform") return await this.buildPlatform();
       }
     });
   }
 
-  copyDirectory(source, destination) {
-    if (!fs.existsSync(destination)) {
-      fs.mkdirSync(destination, { recursive: true });
-    }
+  async Obfuscate() {
+    if (fs.existsSync("./app")) fs.rmSync("./app", { recursive: true });
 
-    const items = fs.readdirSync(source);
+    for (let path of this.Fileslist) {
+      let fileName = path.split("/").pop();
+      let extFile = fileName.split(".").pop();
+      let folder = path.replace(`/${fileName}`, "").replace("src", "app");
 
-    items.forEach((item) => {
-      const sourcePath = path.join(source, item);
-      const destPath = path.join(destination, item);
+      if (!fs.existsSync(folder)) fs.mkdirSync(folder, { recursive: true });
 
-      if (fs.statSync(sourcePath).isDirectory()) {
-        this.copyDirectory(sourcePath, destPath);
-      } else {
-        fs.copyFileSync(sourcePath, destPath);
-      }
-    });
-  }
-
-  async obfuscateCode() {
-    console.log("🔒 Obfuscation du code JavaScript...");
-
-    if (!fs.existsSync(this.srcJsPath)) {
-      console.log("⚠️  Dossier src/js non trouvé, obfuscation ignorée");
-      return;
-    }
-
-    try {
-      // Créer le dossier de sortie
-      if (!fs.existsSync(this.obfuscatedJsPath)) {
-        fs.mkdirSync(this.obfuscatedJsPath, { recursive: true });
-      }
-
-      // Exécuter l'obfuscation
-      execSync(
-        "npx javascript-obfuscator src/js --output dist/js --config obfuscator.config.json",
-        {
-          cwd: __dirname,
-          stdio: "inherit",
+      if (extFile == "js") {
+        let code = fs.readFileSync(path, "utf8");
+        code = code.replace(/src\//g, "app/");
+        if (this.obf) {
+          await new Promise((resolve) => {
+            console.log(`Obfuscate ${path}`);
+            let obf = JavaScriptObfuscator.obfuscate(code, {
+              optionsPreset: "medium-obfuscation",
+              disableConsoleOutput: false,
+            });
+            resolve(
+              fs.writeFileSync(
+                `${folder}/${fileName}`,
+                obf.getObfuscatedCode(),
+                { encoding: "utf-8" }
+              )
+            );
+          });
+        } else {
+          console.log(`Copy ${path}`);
+          fs.writeFileSync(`${folder}/${fileName}`, code, {
+            encoding: "utf-8",
+          });
         }
+      } else {
+        fs.copyFileSync(path, `${folder}/${fileName}`);
+      }
+    }
+  }
+
+  async buildPlatform() {
+    await this.Obfuscate();
+    builder
+      .build({
+        config: {
+          generateUpdatesFilesForAllChannels: false,
+          appId: preductname,
+          productName: preductname,
+          copyright: "Copyright © 2020-2024 Luuxis",
+          artifactName: "${productName}-${os}-${arch}.${ext}",
+          extraMetadata: { main: "app/app.js" },
+          files: ["app/**/*", "package.json", "LICENSE.md"],
+          directories: { output: "dist" },
+          compression: "maximum",
+          asar: true,
+          publish: [
+            {
+              provider: "github",
+              releaseType: "release",
+            },
+          ],
+          win: {
+            icon: "./app/assets/images/icon.ico",
+            target: [
+              {
+                target: "nsis",
+                arch: "x64",
+              },
+            ],
+          },
+          nsis: {
+            oneClick: true,
+            allowToChangeInstallationDirectory: false,
+            createDesktopShortcut: true,
+            runAfterFinish: true,
+          },
+          mac: {
+            icon: "./app/assets/images/icon.icns",
+            category: "public.app-category.games",
+            identity: null,
+            target: [
+              {
+                target: "dmg",
+                arch: "universal",
+              },
+              {
+                target: "zip",
+                arch: "universal",
+              },
+            ],
+          },
+          linux: {
+            icon: "./app/assets/images/icon.png",
+            target: [
+              {
+                target: "AppImage",
+                arch: "x64",
+              },
+            ],
+          },
+        },
+      })
+      .then(() => {
+        console.log("le build est terminé");
+      })
+      .catch((err) => {
+        console.error("Error during build!", err);
+      });
+  }
+
+  getFiles(path, file = []) {
+    if (fs.existsSync(path)) {
+      let files = fs.readdirSync(path);
+      if (files.length == 0) file.push(path);
+      for (let i in files) {
+        let name = `${path}/${files[i]}`;
+        if (fs.statSync(name).isDirectory()) this.getFiles(name, file);
+        else file.push(name);
+      }
+    }
+    return file;
+  }
+
+  async iconSet(url) {
+    let Buffer = await nodeFetch(url);
+    if (Buffer.status == 200) {
+      Buffer = await Buffer.buffer();
+      const image = await Jimp.read(Buffer);
+      Buffer = await image.resize(256, 256).getBufferAsync(Jimp.MIME_PNG);
+      fs.writeFileSync(
+        "src/assets/images/icon.icns",
+        png2icons.createICNS(Buffer, png2icons.BILINEAR, 0)
       );
-
-      console.log("✅ Obfuscation terminée");
-    } catch (error) {
-      console.error("❌ Erreur lors de l'obfuscation:", error);
-      throw error;
-    }
-  }
-
-  buildElectronApp() {
-    console.log("🔨 Construction de l'application Electron...");
-
-    const platform =
-      process.argv
-        .find((arg) => arg.startsWith("--platform="))
-        ?.split("=")[1] || "all";
-
-    let buildCommand = "yarn run build";
-
-    switch (platform) {
-      case "win":
-        buildCommand = "yarn run build:win";
-        break;
-      case "mac":
-        buildCommand = "yarn run build:mac";
-        break;
-      case "linux":
-        buildCommand = "yarn run build:linux";
-        break;
-      default:
-        buildCommand = "yarn run build:all";
-    }
-
-    try {
-      execSync(buildCommand, {
-        cwd: __dirname,
-        stdio: "inherit",
-      });
-
-      console.log("✅ Application Electron construite");
-    } catch (error) {
-      console.error("❌ Erreur lors de la construction:", error);
-      throw error;
-    }
-  }
-
-  async publishToGitHub() {
-    console.log("📤 Publication sur GitHub...");
-
-    try {
-      execSync("yarn run publish", {
-        cwd: __dirname,
-        stdio: "inherit",
-      });
-
-      console.log("✅ Publication terminée");
-    } catch (error) {
-      console.error("❌ Erreur lors de la publication:", error);
-      throw error;
+      fs.writeFileSync(
+        "src/assets/images/icon.ico",
+        png2icons.createICO(Buffer, png2icons.HERMITE, 0, false)
+      );
+      fs.writeFileSync("src/assets/images/icon.png", Buffer);
+      console.log("new icon set");
+    } else {
+      console.log("connection error");
     }
   }
 }
 
-// Exécuter le script
-const buildScript = new BuildScript();
-buildScript.run();
+new Index().init();

@@ -1,5 +1,5 @@
-import { changePage } from "./utils/utils.js";
-import HomeGameManager from "./home-game-manager.js";
+const HomeGameManager = require("../manager/home-game-manager.js");
+const { changePage } = require("../utils/utils.js");
 
 // Variable globale pour suivre l'état d'exécution
 window.isProcessRunning = false;
@@ -56,4 +56,4 @@ class Home {
   }
 }
 
-export default Home;
+module.exports = Home;

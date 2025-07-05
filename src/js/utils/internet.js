@@ -16,4 +16,4 @@ function hasInternetConnection() {
   });
 }
 
-export default hasInternetConnection;
+module.exports = hasInternetConnection;

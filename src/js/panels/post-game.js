@@ -1,6 +1,6 @@
 const { ipcRenderer } = require("electron");
 const path = require("path");
-import { database } from "../utils/utils.js";
+const { database } = require("../utils/utils.js");
 
 class PostGamePanel {
   static id = "post-game-panel";
@@ -93,18 +93,18 @@ class PostGamePanel {
         PostGamePanel.id
       );
 
-        if (result.errorOutput) {
-          this.appendOutput({
-            type: "stderr",
-            data: result.errorOutput,
-          });
-        }
-        if (result.output) {
-          this.appendOutput({
-            type: "stdout",
-            data: result.output,
-          });
-        }
+      if (result.errorOutput) {
+        this.appendOutput({
+          type: "stderr",
+          data: result.errorOutput,
+        });
+      }
+      if (result.output) {
+        this.appendOutput({
+          type: "stdout",
+          data: result.output,
+        });
+      }
 
       if (!result.success) {
         if (result.signal) {
@@ -145,9 +145,8 @@ class PostGamePanel {
     window.isGameProcessRunning = false;
     this.runBtn.disabled = false;
     if (this.cancelBtn) this.cancelBtn.style.display = "none";
-    this.runBtn.innerHTML =
-      '<span class="material-icons">send</span> Run post';
+    this.runBtn.innerHTML = '<span class="material-icons">send</span> Run post';
   }
 }
 
-export default PostGamePanel;
+module.exports = PostGamePanel;

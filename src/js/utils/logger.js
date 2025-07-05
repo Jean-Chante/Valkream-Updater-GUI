@@ -37,4 +37,4 @@ class logger {
   }
 }
 
-export default logger;
+module.exports = logger;

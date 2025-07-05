@@ -1,6 +1,6 @@
 const { ipcRenderer, shell } = require("electron");
 const path = require("path");
-import { showSnackbar } from "../utils/utils.js";
+const { showSnackbar } = require("../utils/utils.js");
 const fs = require("fs");
 
 class UploadGamePanel {
@@ -28,4 +28,4 @@ class UploadGamePanel {
   }
 }
 
-export default UploadGamePanel;
+module.exports = UploadGamePanel;

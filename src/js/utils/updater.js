@@ -1,3 +1,8 @@
+/**
+ * @author Valkream Team
+ * @license MIT - https://opensource.org/licenses/MIT
+ */
+
 const { autoUpdater } = require("electron-updater");
 const { ipcMain, dialog } = require("electron");
 const path = require("path");

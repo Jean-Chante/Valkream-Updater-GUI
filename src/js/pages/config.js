@@ -1,5 +1,5 @@
 const { ipcRenderer } = require("electron");
-import { database, showSnackbar, changePage } from "./utils/utils.js";
+const { changePage, database, showSnackbar } = require("../utils/utils.js");
 const fs = require("fs");
 
 class Config {
@@ -101,4 +101,4 @@ class Config {
   }
 }
 
-export default Config;
+module.exports = Config;
