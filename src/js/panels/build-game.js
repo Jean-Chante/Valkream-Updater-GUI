@@ -65,7 +65,9 @@ class BuildGamePanel {
     this.config = await this.db.readData("configClient");
     this.onlineVersion = await this.getOnlineVersion();
     this.latestBuildGameVersion.innerHTML = `Latest version : ${this.onlineVersion}`;
-    this.appDataPath = await ipcRenderer.invoke("path-app-data");
+    this.appDataPath = `${await ipcRenderer.invoke("path-user-data")}${
+      dev ? "../.." : "/game"
+    }`;
     this.path = path.join(this.appDataPath, "Valheim Valkream Data");
 
     this.bindEvents();

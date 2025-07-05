@@ -16,7 +16,7 @@ class database {
       fileType: dev ? "sqlite" : "db",
       tableName: tableName,
       path: `${await ipcRenderer.invoke("path-user-data")}${
-        dev ? "../.." : "/databases"
+        dev ? "../.." : "/db/databases"
       }`,
       tableColumns: tableConfig,
     });

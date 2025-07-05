@@ -34,15 +34,10 @@ else
 // Configuration du repertoir pour la base de données
 if (dev) {
   let appPath = path.resolve("./data/Updater").replace(/\\/g, "/");
-  let appDataPath = path.resolve("./data/AppData").replace(/\\/g, "/");
   if (!fs.existsSync(appPath)) fs.mkdirSync(appPath, { recursive: true });
-  if (!fs.existsSync(appDataPath))
-    fs.mkdirSync(appDataPath, { recursive: true });
   app.setPath("userData", appPath);
-  app.setPath("appData", appDataPath);
 }
 ipcMain.handle("path-user-data", () => app.getPath("userData"));
-ipcMain.handle("path-app-data", () => app.getPath("appData"));
 
 // windows
 ipcMain.on("main-window-open", () => MainWindow.createWindow());

@@ -12,7 +12,9 @@ class UploadGamePanel {
   }
 
   async init() {
-    this.appDataPath = await ipcRenderer.invoke("path-app-data");
+    this.appDataPath = `${await ipcRenderer.invoke("path-user-data")}${
+      dev ? "../.." : "/game"
+    }`;
     this.path = path.join(this.appDataPath, "Valheim Valkream Data");
     if (!fs.existsSync(this.path)) fs.mkdirSync(this.path, { recursive: true });
 
