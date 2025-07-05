@@ -33,7 +33,7 @@ else
 
 // Configuration du repertoir pour la base de données
 if (dev) {
-  let appPath = path.resolve("./data/Updater").replace(/\\/g, "/");
+  let appPath = path.resolve("./data/").replace(/\\/g, "/");
   if (!fs.existsSync(appPath)) fs.mkdirSync(appPath, { recursive: true });
   app.setPath("userData", appPath);
 }
