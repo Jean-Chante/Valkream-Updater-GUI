@@ -132,10 +132,10 @@ class Index {
         },
       })
       .then(() => {
-        console.log("le build est terminé");
+        console.log("✅ Le build est terminé.");
       })
       .catch((err) => {
-        console.error("Error during build!", err);
+        console.error("❌ Erreur lors du build !", err);
       });
   }
 
@@ -167,9 +167,9 @@ class Index {
         png2icons.createICO(Buffer, png2icons.HERMITE, 0, false)
       );
       fs.writeFileSync("src/assets/images/icon.png", Buffer);
-      console.log("new icon set");
+      console.log("✅ Nouveau jeu d'icône.");
     } else {
-      console.log("connection error");
+      console.log("❌ Erreur lors de la récupération de l'icône.");
     }
   }
 }
