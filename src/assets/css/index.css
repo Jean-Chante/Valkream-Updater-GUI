@@ -1,9 +1,10 @@
 @import "./utils/font.css";
 @import "./utils/theme.css";
 @import "./utils/progress.css";
-@import "./utils/updater.css";
-@import "config.css";
-@import "home.css";
+
+@import "./pages/updater.css";
+@import "./pages/config.css";
+@import "./pages/home.css";
 
 body {
   position: relative;
@@ -104,8 +105,18 @@ input::-webkit-inner-spin-button {
 
 .icon-minimize:hover,
 .icon-restore-down:hover,
-.icon-maximize:hover {
+.icon-maximize:hover,
+.update-check-button:hover {
   background-color: #0000009d;
+}
+
+.update-check-button {
+  font-size: 12px;
+  transition: all 0.3s ease;
+}
+
+.update-check-button:hover {
+  transform: rotate(180deg);
 }
 
 .popup {

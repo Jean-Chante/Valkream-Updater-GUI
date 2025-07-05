@@ -9,26 +9,17 @@ const path = require("path");
 const fs = require("fs");
 const { spawn } = require("child_process");
 const { zipFolder, hashFolder } = require("valkream-function-lib");
-const UpdaterService = require("./js/manager/update-manager.js");
+const CheckForUpdates = require("./check-for-updates.js");
 
 const dev = process.env.NODE_ENV === "development";
-
-// Initialiser le service de mise à jour
-let updaterService;
 
 if (process.platform === "win32") app.setAppUserModelId("Updater-UI");
 if (!app.requestSingleInstanceLock()) app.quit();
 else
   app.whenReady().then(() => {
     MainWindow.createWindow();
-    if (dev)
-      MainWindow.getWindow().webContents.openDevTools({ mode: "detach" });
-
-    // Initialiser le service de mise à jour après la création de la fenêtre
-    if (!dev) {
-      updaterService = new UpdaterService();
-      updaterService.checkForUpdatesOnStartup();
-    }
+    // if (dev)
+    MainWindow.getWindow().webContents.openDevTools({ mode: "detach" });
   });
 
 // Configuration du repertoir pour la base de données
@@ -56,6 +47,7 @@ ipcMain.on("main-window-maximize", () => {
 
 // general
 app.on("window-all-closed", () => app.quit());
+ipcMain.on("check-for-updates", (event) => new CheckForUpdates(event).init());
 ipcMain.handle("show-open-dialog", async () => {
   return await dialog.showOpenDialog({
     properties: ["openDirectory"],

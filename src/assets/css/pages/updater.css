@@ -1,0 +1,238 @@
+.update-container {
+  position: relative;
+  width: 90vw;
+  max-width: 600px;
+  height: auto;
+  min-height: 400px;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--background-transparent);
+  color: var(--color);
+  border-radius: 0 0 20px 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.update-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.update-header h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+  background: linear-gradient(
+    45deg,
+    var(--secondary-color),
+    var(--third-color)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.update-subtitle {
+  font-size: 1.1rem;
+  color: #ccc;
+  margin: 0;
+  opacity: 0.8;
+}
+
+.update-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
+.update-status-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+}
+
+.update-icon {
+  font-size: 4rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+.update-status h2 {
+  font-size: 1.5rem;
+  margin: 0 0 10px 0;
+  color: var(--color);
+}
+
+.status-message {
+  font-size: 1.1rem;
+  color: #ccc;
+  min-height: 1.5em;
+  transition: all 0.3s ease;
+}
+
+.update-progress-container {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--secondary-color),
+    var(--third-color)
+  );
+  border-radius: 4px;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 1rem;
+  color: var(--color);
+  font-weight: bold;
+}
+
+.update-actions {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.retry-button,
+.manual-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: var(--secondary-color);
+  color: white;
+}
+
+.retry-button:hover,
+.manual-button:hover {
+  background: var(--third-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.manual-button {
+  background: var(--background-element);
+  border: 1px solid var(--secondary-color);
+}
+
+.manual-button:hover {
+  background: var(--secondary-color);
+}
+
+.update-footer {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.version-info {
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.version-info span {
+  font-weight: bold;
+  color: var(--secondary-color);
+}
+
+/* États de statut */
+.status-success {
+  color: #4caf50 !important;
+}
+
+.status-error {
+  color: #f44336 !important;
+}
+
+.status-warning {
+  color: #ff9800 !important;
+}
+
+.status-info {
+  color: var(--secondary-color) !important;
+}
+
+/* Animation de chargement */
+.loading {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .update-container {
+    width: 95%;
+    padding: 30px 20px;
+    min-height: 350px;
+  }
+
+  .update-header h1 {
+    font-size: 2rem;
+  }
+
+  .update-icon {
+    font-size: 3rem;
+  }
+
+  .update-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .retry-button,
+  .manual-button {
+    width: 100%;
+    max-width: 200px;
+  }
+}

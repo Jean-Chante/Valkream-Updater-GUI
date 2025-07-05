@@ -6,6 +6,7 @@
 const { NodeBDD, DataType } = require("node-bdd");
 const nodedatabase = new NodeBDD();
 const { ipcRenderer } = require("electron");
+const path = require("path");
 
 const dev = process.env.NODE_ENV === "development";
 

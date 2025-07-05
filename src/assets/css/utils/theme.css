@@ -3,6 +3,7 @@ body {
   --background: #292929;
   --background-element: #424242;
   --background-transparent: #2c2c2ccc;
+  --element-color: #424242;
   --shadow: rgba(25, 25, 25, 0.7);
   --svg-color: brightness(0) saturate(100%) invert(100%) sepia(55%)
     saturate(23%) hue-rotate(236deg) brightness(108%) contrast(92%);

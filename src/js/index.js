@@ -6,7 +6,7 @@
 // import panel
 
 // import modules
-const UpdateManager = require("../js/manager/update-manager.js");
+const Updater = require("../js/pages/updater.js");
 const Config = require("../js/pages/config.js");
 const Home = require("../js/pages/home.js");
 
@@ -21,9 +21,8 @@ const dev = process.env.NODE_ENV === "development";
 class UpdaterGUI {
   async init() {
     this.initFrame();
-    this.createPages(Config, Home);
-    this.startUpdaterUI();
-    this.initUpdateManager();
+    this.createPages(Updater, Config, Home);
+    this.initPage();
   }
 
   initFrame() {
@@ -59,13 +58,9 @@ class UpdaterGUI {
     }
   }
 
-  async startUpdaterUI() {
-    changePage("config");
-  }
-
-  initUpdateManager() {
-    // Initialiser le gestionnaire de mise à jour
-    if (!dev) this.updateManager = new UpdateManager();
+  async initPage() {
+    if (dev) changePage("config");
+    else changePage("updater");
   }
 }
 
