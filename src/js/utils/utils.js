@@ -8,6 +8,7 @@ const database = require("./database.js");
 const logger = require("./logger.js");
 const popup = require("./popup.js");
 const Process = require("./process.js");
+const PathManager = require("./paths.js");
 
 async function changePage(id) {
   let panel = document.querySelector(`#${id}-page`);
@@ -36,4 +37,5 @@ module.exports = {
   popup,
   showSnackbar,
   Process,
+  PathManager,
 };

@@ -4,12 +4,12 @@
  */
 
 const { app, ipcMain, dialog } = require("electron");
-const MainWindow = require("./windows/mainWindow.js");
+const MainWindow = require("./js/windows/mainWindow.js");
 const path = require("path");
 const fs = require("fs");
 const { spawn } = require("child_process");
 const { zipFolder, hashFolder } = require("valkream-function-lib");
-const CheckForUpdates = require("./IpcMainEvents/check-for-updates.js");
+const CheckForUpdates = require("./js/IpcMainEvents/check-for-updates.js");
 
 const dev = process.env.NODE_ENV === "development";
 

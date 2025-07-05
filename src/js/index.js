@@ -8,9 +8,9 @@
 // import modules
 const Updater = require("../js/pages/updater.js");
 const Config = require("../js/pages/config.js");
-const Home = require("../js/pages/home.js");
+const Home = require("../js/pages/Home/home.js");
 
-const { changePage } = require("../js/utils/utils.js");
+const { changePage, PathManager } = require("../js/utils/utils.js");
 
 // libs
 const { ipcRenderer } = require("electron");
@@ -50,7 +50,7 @@ class UpdaterGUI {
       div.id = `${page.id}-page`;
       div.classList.add("page", page.id, "content-scroll");
       div.innerHTML = fs.readFileSync(
-        `${__dirname}/../html/pages/${page.id}.html`,
+        PathManager.getHtmlPath("pages", page.id, `${page.id}.html`),
         "utf8"
       );
       pagesElem.appendChild(div);

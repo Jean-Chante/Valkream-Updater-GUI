@@ -1,6 +1,10 @@
 const { ipcRenderer } = require("electron");
 const path = require("path");
-const { database, showSnackbar, Process } = require("../utils/utils.js");
+const {
+  database,
+  showSnackbar,
+  Process,
+} = require("../../../../../utils/utils.js");
 const fs = require("fs");
 const axios = require("axios");
 const yaml = require("yaml");
