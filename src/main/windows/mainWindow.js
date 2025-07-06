@@ -31,8 +31,10 @@ function createWindow() {
     frame: false,
     show: false,
     webPreferences: {
-      contextIsolation: false,
-      nodeIntegration: true,
+      contextIsolation: true,
+      nodeIntegration: false,
+      enableRemoteModule: false,
+      preload: path.join(__dirname, "../preloader.js"),
     },
   });
 

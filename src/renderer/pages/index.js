@@ -6,11 +6,11 @@
 // import panel
 
 // import modules
-const Updater = require("../js/pages/updater.js");
-const Config = require("../js/pages/config.js");
-const Home = require("../js/pages/Home/home.js");
+const Updater = require("../../js/pages/updater.js");
+const Config = require("../../js/pages/config.js");
+const Home = require("../../js/pages/Home/home.js");
 
-const { changePage, PathManager } = require("../js/utils/utils.js");
+const { changePage, PathManager } = require("../../shared/utils/utils.js");
 
 // libs
 const { ipcRenderer } = require("electron");
