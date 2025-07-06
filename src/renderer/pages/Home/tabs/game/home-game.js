@@ -36,7 +36,7 @@ class HomeGame {
       }
     }
 
-    this.changeGamePanel("upload-game-panel", new UploadGamePanel());
+    this.changeGamePanel("upload-game-panel", this.uploadGamePanel);
   }
 
   initGameButtons() {
