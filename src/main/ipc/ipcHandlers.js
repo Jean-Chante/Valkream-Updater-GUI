@@ -14,19 +14,15 @@ class IpcHandlers {
     ipcMain.handle("path-user-data", () => app.getPath("userData"));
 
     // check for updates
-    ipcMain.handle("check-for-updates", (event) => {
-      return new CheckForUpdates(event).init();
-    });
+    ipcMain.on("check-for-updates", (event) =>
+      new CheckForUpdates(event).init()
+    );
 
     // main window
-    ipcMain.handle("main-window-open", () => MainWindow.createWindow());
-    ipcMain.handle("main-window-close", () => MainWindow.destroyWindow());
-    ipcMain.handle("main-window-reload", () => MainWindow.getWindow().reload());
-    ipcMain.handle("main-window-minimize", () =>
-      MainWindow.getWindow().minimize()
-    );
-    ipcMain.handle("main-window-hide", () => MainWindow.getWindow().hide());
-    ipcMain.handle("main-window-show", () => MainWindow.getWindow().show());
+    ipcMain.on("main-window-open", () => MainWindow.createWindow());
+    ipcMain.on("main-window-close", () => MainWindow.destroyWindow());
+    ipcMain.on("main-window-reload", () => MainWindow.getWindow().reload());
+    ipcMain.on("main-window-minimize", () => MainWindow.getWindow().minimize());
     ipcMain.on("main-window-maximize", () => {
       if (MainWindow.getWindow().isMaximized()) {
         MainWindow.getWindow().unmaximize();
@@ -73,11 +69,6 @@ class IpcHandlers {
     // progress process (for process component)
     ipcMain.handle("progress-process", async (event, process_id, data) => {
       event.sender.send(`process-progress-${process_id}`, data);
-    });
-
-    // path manager
-    ipcMain.handle("path-manager", async (event) => {
-      return PathManager;
     });
   }
 }
