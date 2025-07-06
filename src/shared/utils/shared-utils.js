@@ -5,10 +5,10 @@
 
 const hasInternetConnection = require("./internet.js");
 const database = require("./database.js");
-const logger = require("./logger.js");
+const Logger = require("./logger.js");
 
 module.exports = {
   database,
   hasInternetConnection,
-  logger,
+  Logger,
 };

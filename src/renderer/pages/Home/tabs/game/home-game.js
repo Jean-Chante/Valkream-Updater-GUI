@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const PathManager = require("../../../../../shared/constants/paths.js");
 
 const BuildGamePanel = require("./panels/build-game/build-game.js");
 const PostGamePanel = require("./panels/post-game/post-game.js");
@@ -19,7 +18,7 @@ class HomeGame {
 
   initGamesPanels() {
     // Utilisation de l'utilitaire PathManager
-    const panelsDir = PathManager.getRendererPath(
+    const panelsDir = window.PathManager.getRendererPath(
       "pages",
       "home",
       "tabs",

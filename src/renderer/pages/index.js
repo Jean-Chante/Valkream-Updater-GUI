@@ -7,7 +7,12 @@ const { ipcRenderer } = require("electron");
 const fs = require("fs");
 const path = require("path");
 
-const { changePage } = require("../utils/utils-render.js");
+const PathManager = require("../../shared/constants/paths.js");
+const { changePage } = require(PathManager.getUtilsPath());
+const { Logger } = require(PathManager.getSharedUtilsPath());
+
+window.Logger = Logger;
+window.PathManager = PathManager;
 
 const Updater = require("./updater/updater.js");
 const Config = require("./config/config.js");
@@ -42,7 +47,7 @@ class UpdaterGUI {
   async createPages(...pages) {
     let pagesElem = document.querySelector(".pages");
     for (let page of pages) {
-      console.log(`Initializing ${page.name} Page...`);
+      window.Logger.log(`Initializing ${page.name} Page...`);
       let div = document.createElement("div");
       div.id = `${page.id}-page`;
       div.classList.add("page", page.id, "content-scroll");

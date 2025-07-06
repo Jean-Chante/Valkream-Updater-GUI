@@ -3,7 +3,7 @@
  * @license MIT - https://opensource.org/licenses/MIT
  */
 
-const { app, ipcRenderer } = require("electron");
+const { app } = require("electron");
 const path = require("path");
 const fs = require("fs");
 

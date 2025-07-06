@@ -1,11 +1,7 @@
 const { ipcRenderer } = require("electron");
 const path = require("path");
 
-const PathManager = require("../../../../../../../shared/constants/paths.js");
-const { database } = require(PathManager.getSharedPath(
-  "utils",
-  "shared-utils.js"
-));
+const { database } = require(window.PathManager.getSharedUtilsPath());
 
 class PostGamePanel {
   static id = "post-game-panel";

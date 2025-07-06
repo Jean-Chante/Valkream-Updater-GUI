@@ -1,10 +1,6 @@
 const { ipcRenderer } = require("electron");
 
-const PathManager = require("../../../shared/constants/paths.js");
-const { changePage, showSnackbar } = require(PathManager.getRendererPath(
-  "utils",
-  "utils-render.js"
-));
+const { changePage, showSnackbar } = require(window.PathManager.getUtilsPath());
 
 const dev = process.env.NODE_ENV === "development";
 
@@ -140,7 +136,7 @@ class Updater {
 
   // Méthode pour obtenir la version actuelle
   getCurrentVersion() {
-    const pkg = require(PathManager.getAbsolutePath("package.json"));
+    const pkg = require(window.PathManager.getAbsolutePath("package.json"));
     return pkg.version;
   }
 }

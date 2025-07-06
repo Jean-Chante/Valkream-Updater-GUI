@@ -21,6 +21,14 @@ class PathManager {
   getMainPath(...segments) {
     return this.getAbsolutePath("src", "main", ...segments);
   }
+
+  getUtilsPath(...segments) {
+    return this.getRendererPath("utils", "utils-render.js", ...segments);
+  }
+
+  getSharedUtilsPath(...segments) {
+    return this.getSharedPath("utils", "shared-utils.js", ...segments);
+  }
 }
 
 module.exports = new PathManager();

@@ -1,15 +1,8 @@
 const { ipcRenderer } = require("electron");
 const fs = require("fs");
 
-const PathManager = require("../../../shared/constants/paths.js");
-const { changePage, showSnackbar } = require(PathManager.getRendererPath(
-  "utils",
-  "utils-render.js"
-));
-const { database } = require(PathManager.getSharedPath(
-  "utils",
-  "shared-utils.js"
-));
+const { changePage, showSnackbar } = require(window.PathManager.getUtilsPath());
+const { database } = require(window.PathManager.getSharedUtilsPath());
 
 class Config {
   static id = "config";
@@ -37,7 +30,7 @@ class Config {
   };
 
   async initializeClientConfig() {
-    console.log("Initializing Config Client...");
+    window.Logger.log("Initializing Config Client in the db...");
     let configData = await this.db.readData("configClient");
     if (!configData) await this.db.createData("configClient", this.DEFAULTS);
   }

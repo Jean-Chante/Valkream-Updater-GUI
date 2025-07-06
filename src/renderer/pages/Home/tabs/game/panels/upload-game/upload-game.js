@@ -2,11 +2,7 @@ const { ipcRenderer, shell } = require("electron");
 const path = require("path");
 const fs = require("fs");
 
-const PathManager = require("../../../../../../../shared/constants/paths.js");
-const { showSnackbar } = require(PathManager.getRendererPath(
-  "utils",
-  "utils-render.js"
-));
+const { showSnackbar } = require(window.PathManager.getUtilsPath());
 
 class UploadGamePanel {
   constructor() {
@@ -29,7 +25,7 @@ class UploadGamePanel {
         shell.openPath(this.path);
         showSnackbar("Dossier ouvert avec succès", "success");
       } catch (error) {
-        console.error(error);
+        window.error(error);
         showSnackbar("Erreur lors de l'ouverture du dossier", "error");
       }
     });

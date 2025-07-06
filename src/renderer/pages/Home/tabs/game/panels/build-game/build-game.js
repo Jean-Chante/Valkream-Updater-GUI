@@ -1,15 +1,8 @@
 const { ipcRenderer } = require("electron");
 const path = require("path");
 
-const PathManager = require("../../../../../../../shared/constants/paths.js");
-const { showSnackbar, Process } = require(PathManager.getRendererPath(
-  "utils",
-  "utils-render.js"
-));
-const { database } = require(PathManager.getSharedPath(
-  "utils",
-  "shared-utils.js"
-));
+const { showSnackbar, Process } = require(window.PathManager.getUtilsPath());
+const { database } = require(window.PathManager.getSharedUtilsPath());
 
 const fs = require("fs");
 const axios = require("axios");
@@ -200,7 +193,7 @@ class BuildGamePanel {
             );
           }
         } else if (data.type === "complete") {
-          console.log("Zip completed:", data.filePath);
+          window.Logger.log("Zip completed:", data.filePath);
           const process = this.processes[this.currentFileType];
           if (process) {
             process.setStatus({
@@ -334,7 +327,7 @@ class BuildGamePanel {
       });
       showSnackbar("Build terminé avec succès!", "success");
     } catch (error) {
-      console.error(error);
+      window.Logger.error(error);
       if (!this.isCancelled) {
         const process = this.processes[this.currentFileType];
         if (process) {

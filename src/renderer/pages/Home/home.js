@@ -1,11 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const PathManager = require("../../../shared/constants/paths.js");
-const { changePage } = require(PathManager.getRendererPath(
-  "utils",
-  "utils-render.js"
-));
+const { changePage } = require(window.PathManager.getUtilsPath());
 
 const HomeGame = require("./tabs/game/home-game.js");
 
@@ -26,13 +22,17 @@ class Home {
 
   getTabFolders() {
     try {
-      const tabsDir = PathManager.getRendererPath("pages", "home", "tabs");
+      const tabsDir = window.PathManager.getRendererPath(
+        "pages",
+        "home",
+        "tabs"
+      );
       return fs.readdirSync(tabsDir).filter((tabFolder) => {
         const tabPath = path.join(tabsDir, tabFolder);
         return fs.statSync(tabPath).isDirectory();
       });
     } catch (error) {
-      console.error("Erreur lors de la récupération des onglets:", error);
+      window.Logger.error("Erreur lors de la récupération des onglets:", error);
       return [];
     }
   }
@@ -47,7 +47,7 @@ class Home {
       if (button) {
         this.buttons[tabFolder] = button;
       } else {
-        console.warn(
+        window.Logger.warn(
           `Bouton ${buttonId} non trouvé pour l'onglet ${tabFolder}`
         );
       }
@@ -56,7 +56,7 @@ class Home {
 
   loadTabContent() {
     const homeContent = document.querySelector(".home-content");
-    const tabsDir = PathManager.getRendererPath("pages", "home", "tabs");
+    const tabsDir = window.PathManager.getRendererPath("pages", "home", "tabs");
     const tabFolders = this.getTabFolders();
 
     tabFolders.forEach((tabFolder) => {
