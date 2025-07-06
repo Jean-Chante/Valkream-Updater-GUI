@@ -1,6 +1,7 @@
 @import "./utils/font.css";
 @import "./utils/theme.css";
 @import "./utils/progress.css";
+@import "./utils/microtip.css";
 
 @import "./pages/updater.css";
 @import "./pages/config.css";

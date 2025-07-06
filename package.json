@@ -17,14 +17,14 @@
     "ignore": "**/test"
   },
   "dependencies": {
-    "electron-updater": "^6.1.8",
     "axios": "^1.10.0",
+    "electron-updater": "^6.1.8",
+    "fs": "^0.0.1-security",
     "node-bdd": "^2.0.4",
     "node-fetch": "^2.7.0",
-    "fs": "^0.0.1-security",
     "path": "^0.12.7",
-    "yaml": "^2.2.2",
-    "valkream-function-lib": "latest"
+    "valkream-function-lib": "latest",
+    "yaml": "^2.8.0"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
