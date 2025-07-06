@@ -1,10 +1,16 @@
 const { ipcRenderer } = require("electron");
 const path = require("path");
-const {
-  database,
-  showSnackbar,
-  Process,
-} = require("../../../../../utils/utils.js");
+
+const PathManager = require("../../../../../../../shared/constants/paths.js");
+const { showSnackbar, Process } = require(PathManager.getRendererPath(
+  "utils",
+  "utils-render.js"
+));
+const { database } = require(PathManager.getSharedPath(
+  "utils",
+  "shared-utils.js"
+));
+
 const fs = require("fs");
 const axios = require("axios");
 const yaml = require("yaml");

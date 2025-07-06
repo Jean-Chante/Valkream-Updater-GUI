@@ -3,18 +3,15 @@
  * @license MIT - https://opensource.org/licenses/MIT
  */
 
-// import panel
-
-// import modules
-const Updater = require("../../js/pages/updater.js");
-const Config = require("../../js/pages/config.js");
-const Home = require("../../js/pages/Home/home.js");
-
-const { changePage, PathManager } = require("../../shared/utils/utils.js");
-
-// libs
 const { ipcRenderer } = require("electron");
 const fs = require("fs");
+const path = require("path");
+
+const { changePage } = require("../utils/utils-render.js");
+
+const Updater = require("./updater/updater.js");
+const Config = require("./config/config.js");
+const Home = require("./home/home.js");
 
 const dev = process.env.NODE_ENV === "development";
 
@@ -50,7 +47,7 @@ class UpdaterGUI {
       div.id = `${page.id}-page`;
       div.classList.add("page", page.id, "content-scroll");
       div.innerHTML = fs.readFileSync(
-        PathManager.getHtmlPath("pages", page.id, `${page.id}.html`),
+        path.join(__dirname, page.id, `${page.id}.html`),
         "utf8"
       );
       pagesElem.appendChild(div);

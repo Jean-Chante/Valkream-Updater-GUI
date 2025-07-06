@@ -1,7 +1,13 @@
 const fs = require("fs");
 const path = require("path");
+
+const PathManager = require("../../../shared/constants/paths.js");
+const { changePage } = require(PathManager.getRendererPath(
+  "utils",
+  "utils-render.js"
+));
+
 const HomeGame = require("./tabs/game/home-game.js");
-const { changePage, PathManager } = require("../../utils/utils.js");
 
 class Home {
   static id = "home";
@@ -20,7 +26,7 @@ class Home {
 
   getTabFolders() {
     try {
-      const tabsDir = PathManager.getHtmlPath("pages", "home", "tabs");
+      const tabsDir = PathManager.getRendererPath("pages", "home", "tabs");
       return fs.readdirSync(tabsDir).filter((tabFolder) => {
         const tabPath = path.join(tabsDir, tabFolder);
         return fs.statSync(tabPath).isDirectory();
@@ -50,7 +56,7 @@ class Home {
 
   loadTabContent() {
     const homeContent = document.querySelector(".home-content");
-    const tabsDir = PathManager.getHtmlPath("pages", "home", "tabs");
+    const tabsDir = PathManager.getRendererPath("pages", "home", "tabs");
     const tabFolders = this.getTabFolders();
 
     tabFolders.forEach((tabFolder) => {

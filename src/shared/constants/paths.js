@@ -10,9 +10,16 @@ class PathManager {
     return path.join(this.rootDir, ...segments);
   }
 
-  // Chemin vers les fichiers HTML
-  getHtmlPath(...segments) {
-    return this.getAbsolutePath("src", "renderer", "pages", ...segments);
+  getSharedPath(...segments) {
+    return this.getAbsolutePath("src", "shared", ...segments);
+  }
+
+  getRendererPath(...segments) {
+    return this.getAbsolutePath("src", "renderer", ...segments);
+  }
+
+  getMainPath(...segments) {
+    return this.getAbsolutePath("src", "main", ...segments);
   }
 }
 

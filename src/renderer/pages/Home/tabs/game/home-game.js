@@ -1,9 +1,10 @@
 const fs = require("fs");
 const path = require("path");
-const { PathManager } = require("../../../../utils/utils.js");
-const BuildGamePanel = require("./panels/build-game.js");
-const PostGamePanel = require("./panels/post-game.js");
-const UploadGamePanel = require("./panels/upload-game.js");
+const PathManager = require("../../../../../shared/constants/paths.js");
+
+const BuildGamePanel = require("./panels/build-game/build-game.js");
+const PostGamePanel = require("./panels/post-game/post-game.js");
+const UploadGamePanel = require("./panels/upload-game/upload-game.js");
 
 class HomeGame {
   init() {
@@ -18,7 +19,7 @@ class HomeGame {
 
   initGamesPanels() {
     // Utilisation de l'utilitaire PathManager
-    const panelsDir = PathManager.getHtmlPath(
+    const panelsDir = PathManager.getRendererPath(
       "pages",
       "home",
       "tabs",
@@ -28,7 +29,10 @@ class HomeGame {
 
     for (let panel of fs.readdirSync(panelsDir)) {
       if (panel.includes("game")) {
-        const html = fs.readFileSync(path.join(panelsDir, panel), "utf8");
+        const html = fs.readFileSync(
+          path.join(panelsDir, panel, `${panel}.html`),
+          "utf8"
+        );
         this.panels.innerHTML += html;
       }
     }

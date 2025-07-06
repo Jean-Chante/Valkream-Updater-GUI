@@ -1,7 +1,12 @@
 const { ipcRenderer, shell } = require("electron");
 const path = require("path");
-const { showSnackbar } = require("../../../../../utils/utils.js");
 const fs = require("fs");
+
+const PathManager = require("../../../../../../../shared/constants/paths.js");
+const { showSnackbar } = require(PathManager.getRendererPath(
+  "utils",
+  "utils-render.js"
+));
 
 class UploadGamePanel {
   constructor() {

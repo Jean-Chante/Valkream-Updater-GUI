@@ -5,7 +5,9 @@
 
 const { app, BrowserWindow, Menu } = require("electron");
 const path = require("path");
+
 const dev = process.env.NODE_ENV === "development";
+
 let mainWindow = undefined;
 
 function getWindow() {
@@ -31,16 +33,16 @@ function createWindow() {
     frame: false,
     show: false,
     webPreferences: {
-      contextIsolation: true,
-      nodeIntegration: false,
-      enableRemoteModule: false,
-      preload: path.join(__dirname, "../preloader.js"),
+      contextIsolation: false,
+      nodeIntegration: true,
     },
   });
 
   Menu.setApplicationMenu(null);
   mainWindow.setMenuBarVisibility(false);
-  mainWindow.loadFile(path.join(`${app.getAppPath()}/src/html/index.html`));
+  mainWindow.loadFile(
+    path.join(`${app.getAppPath()}/src/renderer/pages/index.html`)
+  );
   mainWindow.once("ready-to-show", () => {
     if (mainWindow) {
       if (dev) mainWindow.webContents.openDevTools({ mode: "detach" });

@@ -1,6 +1,15 @@
 const { ipcRenderer } = require("electron");
-const { changePage, database, showSnackbar } = require("../utils/utils.js");
 const fs = require("fs");
+
+const PathManager = require("../../../shared/constants/paths.js");
+const { changePage, showSnackbar } = require(PathManager.getRendererPath(
+  "utils",
+  "utils-render.js"
+));
+const { database } = require(PathManager.getSharedPath(
+  "utils",
+  "shared-utils.js"
+));
 
 class Config {
   static id = "config";
