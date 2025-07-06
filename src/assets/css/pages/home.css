@@ -8,7 +8,7 @@
   position: relative;
   height: 56px;
   padding-top: 36px;
-  z-index: 10;
+  z-index: 9;
 }
 
 .topbar-icon {
@@ -74,7 +74,7 @@
   flex-direction: column;
   align-items: center;
   padding-top: 80px;
-  z-index: 9;
+  z-index: 8;
   margin-top: 66px;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.07);
   backdrop-filter: blur(6px);
@@ -93,6 +93,7 @@
   transition: background 0.2s, box-shadow 0.2s;
   font-size: 1.7rem;
   box-shadow: none;
+  z-index: 10;
 }
 .left-menu-btn .material-icons {
   font-size: 2rem;
@@ -205,10 +206,12 @@
   color: var(--color);
 }
 
-.run-btn.background-yellow {
+.run-btn.background-yellow,
+.run-btn.background-white {
   color: #222;
 }
-.run-btn.background-yellow .material-icons {
+.run-btn.background-yellow .material-icons,
+.run-btn.background-white .material-icons {
   color: #222;
 }
 

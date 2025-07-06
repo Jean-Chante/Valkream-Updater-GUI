@@ -6,9 +6,7 @@ const { showSnackbar } = require(window.PathManager.getUtilsPath());
 
 class UploadGamePanel {
   constructor() {
-    this.panelContentIcon = document.querySelector(
-      "#upload-game-panel-content .material-icons"
-    );
+    this.openDirBtn = document.querySelector("#run-open-dir-btn-game");
     this.init();
   }
 
@@ -20,9 +18,10 @@ class UploadGamePanel {
     this.path = path.join(this.appDataPath, "Valheim Valkream Data");
     if (!fs.existsSync(this.path)) fs.mkdirSync(this.path, { recursive: true });
 
-    this.panelContentIcon.addEventListener("click", () => {
+    this.openDirBtn.addEventListener("click", async () => {
+      window.Logger.log("Ouverture du dossier");
       try {
-        shell.openPath(this.path);
+        await shell.openPath(this.path);
         showSnackbar("Dossier ouvert avec succès", "success");
       } catch (error) {
         window.error(error);
