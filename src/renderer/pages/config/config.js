@@ -17,16 +17,12 @@ class Config {
     document
       .getElementById("reset-btn")
       .addEventListener("click", () => this.resetForm());
-    document
-      .getElementById("choose-folder")
-      .addEventListener("click", this.chooseFolder.bind(this));
   }
 
   DEFAULTS = {
     apiKey: "SECRET_API_KEY",
     apiToken: "SECRET_API_TOKEN",
     serverUrl: "http://localhost:3000",
-    folderPath: "C:\\code\\Valkream-Launcher",
   };
 
   async initializeClientConfig() {
@@ -40,7 +36,6 @@ class Config {
     document.getElementById("apiKey").value = configData.apiKey;
     document.getElementById("apiToken").value = configData.apiToken;
     document.getElementById("serverUrl").value = configData.serverUrl;
-    document.getElementById("folderPath").value = configData.folderPath;
     this.checkUrlWarning(configData.serverUrl);
     document.getElementById("serverUrl").addEventListener("input", (e) => {
       this.checkUrlWarning(e.target.value);
@@ -59,46 +54,26 @@ class Config {
     }
   }
 
-  async chooseFolder() {
-    const folder = await ipcRenderer.invoke("show-open-dialog");
-    if (folder && folder.filePaths[0])
-      document.getElementById("folderPath").value = folder.filePaths[0];
-  }
-
   async saveConfig(e) {
     e.preventDefault();
     const apiKey = document.getElementById("apiKey").value;
     const apiToken = document.getElementById("apiToken").value;
     const serverUrl = document.getElementById("serverUrl").value;
-    const folderPath = document.getElementById("folderPath").value;
 
-    if (
-      fs.existsSync(folderPath) &&
-      fs.existsSync(folderPath + "/package.json")
-    ) {
-      const packageJson = JSON.parse(
-        fs.readFileSync(folderPath + "/package.json", "utf8")
-      );
-      if (packageJson.name === "Updater-Saver-Game-Launcher-Valkream") {
-        await this.db.updateData("configClient", {
-          apiKey: apiKey,
-          apiToken: apiToken,
-          serverUrl: serverUrl,
-          folderPath: folderPath,
-        });
+    await this.db.updateData("configClient", {
+      apiKey: apiKey,
+      apiToken: apiToken,
+      serverUrl: serverUrl,
+    });
 
-        showSnackbar("Configuration enregistrée !", "success");
-        return await changePage("home");
-      } else showSnackbar("Le dossier n'est pas un projet Valkream !", "error");
-    } else showSnackbar("Le dossier n'est pas un projet Valkream !", "error");
-    return;
+    showSnackbar("Configuration enregistrée !", "success");
+    return await changePage("home");
   }
 
   resetForm() {
     document.getElementById("apiKey").value = this.DEFAULTS.apiKey;
     document.getElementById("apiToken").value = this.DEFAULTS.apiToken;
     document.getElementById("serverUrl").value = this.DEFAULTS.serverUrl;
-    document.getElementById("folderPath").value = this.DEFAULTS.folderPath;
     this.checkUrlWarning(this.DEFAULTS.serverUrl);
   }
 }

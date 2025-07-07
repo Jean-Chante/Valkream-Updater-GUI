@@ -92,7 +92,7 @@
   transition: background 0.2s;
 }
 
-#choose-folder {
+.form-button-frame {
   padding: 0.4rem;
   background: var(--background);
   color: var(--color);
