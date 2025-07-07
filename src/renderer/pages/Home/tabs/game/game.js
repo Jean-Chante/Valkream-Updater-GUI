@@ -5,7 +5,7 @@ const BuildGamePanel = require("./panels/build-game/build-game.js");
 const PostGamePanel = require("./panels/post-game/post-game.js");
 const UploadGamePanel = require("./panels/upload-game/upload-game.js");
 
-class HomeGame {
+class Game {
   init() {
     this.panels = document.querySelector(".game-panels");
     this.initGamesPanels();
@@ -27,13 +27,11 @@ class HomeGame {
     );
 
     for (let panel of fs.readdirSync(panelsDir)) {
-      if (panel.includes("game")) {
-        const html = fs.readFileSync(
-          path.join(panelsDir, panel, `${panel}.html`),
-          "utf8"
-        );
-        this.panels.innerHTML += html;
-      }
+      const html = fs.readFileSync(
+        path.join(panelsDir, panel, `${panel}.html`),
+        "utf8"
+      );
+      this.panels.innerHTML += html;
     }
 
     this.changeGamePanel("upload-game-panel", this.uploadGamePanel);
@@ -73,10 +71,10 @@ class HomeGame {
         panel.style.display = "none";
       }
       const panelToDisplay = document.getElementById(panelToRender);
-      if (panelToDisplay) panelToDisplay.style.display = "block";
+      if (panelToDisplay) panelToDisplay.style = "";
       if (panelAction) setTimeout(() => panelAction, 100);
     }
   }
 }
 
-module.exports = HomeGame;
+module.exports = Game;

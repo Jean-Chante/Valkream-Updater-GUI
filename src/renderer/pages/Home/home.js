@@ -3,8 +3,8 @@ const path = require("path");
 
 const { changePage } = require(window.PathManager.getUtilsPath());
 
-const HomeGame = require("./tabs/game/home-game.js");
-
+const Game = require("./tabs/game/game.js");
+const Tools = require("./tabs/tools/tools.js");
 class Home {
   static id = "home";
 
@@ -17,7 +17,8 @@ class Home {
 
     this.selectDefaultTab();
 
-    new HomeGame().init();
+    new Game().init();
+    new Tools().init();
   }
 
   getTabFolders() {
