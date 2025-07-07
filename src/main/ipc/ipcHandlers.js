@@ -15,7 +15,7 @@ class IpcHandlers {
 
     // check for updates
     ipcMain.on("check-for-updates", (event) =>
-      new CheckForUpdates(event).init()
+      new CheckForUpdates().init(event)
     );
 
     // main window
@@ -40,17 +40,18 @@ class IpcHandlers {
 
     // node script
     ipcMain.handle("execute-node-script", (event, scriptPath, args) => {
-      return new NodeScript(event).execute(scriptPath, args);
+      return new NodeScript().execute(event, scriptPath, args);
     });
     ipcMain.handle("cancel-node-script", (event, scriptName) => {
-      return new NodeScript(event).cancel(scriptName);
+      return new NodeScript().cancel(scriptName);
     });
 
     // zip folder
     ipcMain.handle(
       "zip-folder",
       (event, sourceFolderPath, zipOutputPath, scriptName) => {
-        return new ZipFolder(event).init(
+        return new ZipFolder().init(
+          event,
           sourceFolderPath,
           zipOutputPath,
           scriptName
@@ -58,7 +59,7 @@ class IpcHandlers {
       }
     );
     ipcMain.handle("cancel-zip-folder", (event, scriptName) => {
-      return new ZipFolder(event).cancel(scriptName);
+      return new ZipFolder().cancel(scriptName);
     });
 
     // hash folder

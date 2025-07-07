@@ -2,14 +2,10 @@ const { spawn } = require("child_process");
 const path = require("path");
 
 // Map pour stocker les processus enfants par nom de script
-const runningScripts = {};
+let runningScripts = {};
 
 class NodeScript {
-  constructor(event) {
-    this.runningScripts = runningScripts;
-    this.event = event;
-  }
-  execute(scriptPath, args = [], scriptName = "default") {
+  execute(event, scriptPath, args = [], scriptName = "default") {
     return new Promise((resolve, reject) => {
       const scriptDir = path.dirname(scriptPath);
       const scriptBaseName = path.basename(scriptPath);
@@ -30,7 +26,7 @@ class NodeScript {
       child.stdout.on("data", (data) => {
         const newData = data.toString();
         output += newData;
-        this.event.sender.send(`script-output-${scriptName}`, {
+        event.sender.send(`script-output-${scriptName}`, {
           type: "stdout",
           data: newData,
         });
@@ -39,7 +35,7 @@ class NodeScript {
       child.stderr.on("data", (data) => {
         const newData = data.toString();
         errorOutput += newData;
-        this.event.sender.send("script-output", {
+        event.sender.send("script-output", {
           type: "stderr",
           data: newData,
         });

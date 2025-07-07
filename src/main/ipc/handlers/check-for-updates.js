@@ -6,12 +6,13 @@
 const { autoUpdater } = require("electron-updater");
 
 class CheckForUpdates {
-  constructor(event) {
-    this.event = event;
+  constructor() {
     this.timeout = 1000;
   }
 
-  async init() {
+  async init(event) {
+    this.event = event;
+
     //config
     autoUpdater.allowDowngrade = true; // Autoriser le downgrade
     autoUpdater.allowPrerelease = true;

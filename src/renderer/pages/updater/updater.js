@@ -55,10 +55,6 @@ class Updater {
   }
 
   startUpdateCheck() {
-    this.updateStatusMessage(
-      "Vérification des mises à jour en cours...",
-      "info"
-    );
     this.updateIcon.textContent = "⏳";
     this.updateIcon.className = "update-icon loading";
 
@@ -66,6 +62,9 @@ class Updater {
     this.retryButton.style.display = "none";
     this.manualButton.style.display = "none";
     this.progressContainer.style.display = "none";
+
+    // Charger la version actuelle
+    this.currentVersion.textContent = this.getCurrentVersion();
 
     // Lancer la vérification
     ipcRenderer.send("check-for-updates");

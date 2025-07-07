@@ -33,7 +33,7 @@ Une interface graphique moderne et intuitive pour la gestion des mises à jour d
 
 ### Prérequis
 
-- Node.js (version 16 ou supérieure)
+- Node.js (version 22 ou supérieure)
 - npm ou yarn
 - Git
 

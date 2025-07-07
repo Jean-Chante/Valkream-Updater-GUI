@@ -42,7 +42,8 @@ class Index {
       if (extFile == "js") {
         let code = fs.readFileSync(path, "utf8");
         code = code.replace(/src\//g, "build/");
-        if (this.obf) {
+        // ignore main process files that create some problems after being obsfuscate
+        if (this.obf && !path.includes("src/main/")) {
           await new Promise((resolve) => {
             console.log(`Obfuscate ${path}`);
             let obf = JavaScriptObfuscator.obfuscate(code, {
