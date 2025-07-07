@@ -17,7 +17,6 @@ class Game {
   }
 
   initGamesPanels() {
-    // Utilisation de l'utilitaire PathManager
     const panelsDir = window.PathManager.getRendererPath(
       "pages",
       "home",

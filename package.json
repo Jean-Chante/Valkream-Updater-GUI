@@ -1,7 +1,7 @@
 {
   "name": "valkream-updater-gui",
   "productName": "Valkream Updater",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "GUI for Valheim game updater",
   "main": "./src/app.js",
   "author": "Valkream Team",

@@ -67,6 +67,9 @@ class Updater {
     this.manualButton.style.display = "none";
     this.progressContainer.style.display = "none";
 
+    // Charger la version actuelle
+    this.currentVersion.textContent = this.getCurrentVersion();
+
     // Lancer la vérification
     ipcRenderer.send("check-for-updates");
   }

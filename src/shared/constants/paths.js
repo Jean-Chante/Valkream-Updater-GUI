@@ -2,24 +2,29 @@ const path = require("path");
 
 class PathManager {
   constructor() {
-    this.rootDir = process.cwd();
+    // __dirname pointe sur le dossier contenant ce fichier, même dans l'asar
+    this.srcDir = path.resolve(__dirname, "../../");
   }
 
-  // Obtenir le chemin absolu depuis la racine
+  // Obtenir le chemin absolu depuis la racine du projet (source ou build)
   getAbsolutePath(...segments) {
-    return path.join(this.rootDir, ...segments);
+    return path.join(this.srcDir, "../", ...segments);
+  }
+
+  getSrcPath(...segments) {
+    return path.join(this.srcDir, ...segments);
   }
 
   getSharedPath(...segments) {
-    return this.getAbsolutePath("src", "shared", ...segments);
+    return this.getSrcPath("shared", ...segments);
   }
 
   getRendererPath(...segments) {
-    return this.getAbsolutePath("src", "renderer", ...segments);
+    return this.getSrcPath("renderer", ...segments);
   }
 
   getMainPath(...segments) {
-    return this.getAbsolutePath("src", "main", ...segments);
+    return this.getSrcPath("main", ...segments);
   }
 
   getUtilsPath(...segments) {
