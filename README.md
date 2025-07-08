@@ -41,7 +41,7 @@ Une interface graphique moderne et intuitive pour la gestion des mises à jour d
 
 ```bash
 # Cloner le repository
-git clone https://github.com/Jean-Chante/Valkream-Updater-GUI.git
+git clone https://github.com/Valkream-Inc/Valkream-Updater-GUI.git
 cd Valkream-Updater-GUI
 
 # Installer les dépendances
