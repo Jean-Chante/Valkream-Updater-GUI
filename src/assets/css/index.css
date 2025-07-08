@@ -5,6 +5,7 @@
 @import "./utils/popup.css";
 @import "./utils/progress.css";
 @import "./utils/snackbar.css";
+@import "./utils/dropzone.css";
 
 @import "./pages/updater.css";
 @import "./pages/config.css";

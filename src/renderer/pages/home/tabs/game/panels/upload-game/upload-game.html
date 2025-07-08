@@ -9,6 +9,24 @@
   <div class="panel-content">
     <div class="panel-content-item">
       <h2>Uploader le dossier Valheim Valkream Data ici</h2>
+      <div id="upload-dropzone" class="dropzone">
+        <span>Déposez ici votre dossier ou cliquez pour sélectionner</span>
+        <input
+          type="file"
+          id="upload-input"
+          webkitdirectory
+          directory
+          multiple
+          style="display: none"
+        />
+        <progress
+          id="upload-game-progress-bar"
+          class="upload-progress-bar"
+          value="0"
+          max="100"
+          style="width: calc(100% - 2cm); display: none; margin: 0 1cm"
+        ></progress>
+      </div>
     </div>
   </div>
 </div>

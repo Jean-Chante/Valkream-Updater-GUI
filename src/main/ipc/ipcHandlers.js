@@ -5,6 +5,7 @@ const PathManager = require("../../shared/constants/paths.js");
 const NodeScript = require("./handlers/node-script.js");
 const ZipFolder = require("./handlers/zip-folder.js");
 const CheckForUpdates = require("./handlers/check-for-updates.js");
+const UploadFiles = require("./handlers/upload-game-files.js");
 
 const MainWindow = require("../windows/mainWindow.js");
 
@@ -65,6 +66,11 @@ class IpcHandlers {
     // hash folder
     ipcMain.handle("hash-folder", async (event, folderPath) => {
       return await hashFolder(folderPath);
+    });
+
+    // upload game files
+    ipcMain.on("upload-files", async (event, files, destPath, id) => {
+      return new UploadFiles().init(event, files, destPath, id);
     });
 
     // progress process (for process component)

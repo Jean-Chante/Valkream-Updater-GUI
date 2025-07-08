@@ -1,0 +1,28 @@
+/* Dropzone de l'upload de jeu */
+.dropzone {
+  border: 2px dashed var(--color);
+  border-radius: 10px;
+  background: var(--background);
+  color: var(--color);
+  padding: 32px 0;
+  text-align: center;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  margin-bottom: 16px;
+}
+
+.dropzone.dragover {
+  border-color: var(--background);
+  background: var(--color);
+  color: var(--background);
+}
+
+.upload-progress-bar {
+  margin-top: 8px;
+  height: 18px;
+  border-radius: 6px;
+  background: #e0e7ef;
+  accent-color: #4a90e2;
+  transition: value 0.2s;
+}
