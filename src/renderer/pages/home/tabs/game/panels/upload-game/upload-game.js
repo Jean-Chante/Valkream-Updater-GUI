@@ -77,6 +77,7 @@ class UploadGamePanel {
         showSnackbar(message, status ? "success" : "error");
         this.progressBar.style.display = "none";
         this.progressBar.value = 0;
+        window.isGameProcessRunning = false;
       }
     );
   }
@@ -119,6 +120,7 @@ class UploadGamePanel {
       showSnackbar("Aucun fichier sélectionné", "error");
       return;
     }
+    window.isGameProcessRunning = true;
     this.progressBar.value = 0;
     this.progressBar.style.display = "block";
     const fileList = files

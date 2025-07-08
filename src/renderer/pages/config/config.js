@@ -23,6 +23,7 @@ class Config {
     apiKey: "SECRET_API_KEY",
     apiToken: "SECRET_API_TOKEN",
     serverUrl: "http://localhost:3000",
+    thunderstoreUrl: "https://thunderstore.io/",
   };
 
   async initializeClientConfig() {
@@ -36,10 +37,20 @@ class Config {
     document.getElementById("apiKey").value = configData.apiKey;
     document.getElementById("apiToken").value = configData.apiToken;
     document.getElementById("serverUrl").value = configData.serverUrl;
+    document.getElementById("thunderstoreUrl").value =
+      configData.thunderstoreUrl || this.DEFAULTS.thunderstoreUrl;
     this.checkUrlWarning(configData.serverUrl);
+    this.checkThunderstoreUrlWarning(
+      configData.thunderstoreUrl || this.DEFAULTS.thunderstoreUrl
+    );
     document.getElementById("serverUrl").addEventListener("input", (e) => {
       this.checkUrlWarning(e.target.value);
     });
+    document
+      .getElementById("thunderstoreUrl")
+      .addEventListener("input", (e) => {
+        this.checkThunderstoreUrlWarning(e.target.value);
+      });
   }
 
   checkUrlWarning(url) {
@@ -54,16 +65,30 @@ class Config {
     }
   }
 
+  checkThunderstoreUrlWarning(url) {
+    let warningDiv = document.getElementById("modpack-warning");
+    if (!url.startsWith("https://thunderstore.io/")) {
+      warningDiv.style.display = "block";
+      warningDiv.textContent =
+        "Attention : L'URL doit commencer par https://thunderstore.io/";
+    } else {
+      warningDiv.style.display = "none";
+      warningDiv.textContent = "";
+    }
+  }
+
   async saveConfig(e) {
     e.preventDefault();
     const apiKey = document.getElementById("apiKey").value;
     const apiToken = document.getElementById("apiToken").value;
     const serverUrl = document.getElementById("serverUrl").value;
+    const thunderstoreUrl = document.getElementById("thunderstoreUrl").value;
 
     await this.db.updateData("configClient", {
       apiKey: apiKey,
       apiToken: apiToken,
       serverUrl: serverUrl,
+      thunderstoreUrl: thunderstoreUrl,
     });
 
     showSnackbar("Configuration enregistrée !", "success");
@@ -74,7 +99,10 @@ class Config {
     document.getElementById("apiKey").value = this.DEFAULTS.apiKey;
     document.getElementById("apiToken").value = this.DEFAULTS.apiToken;
     document.getElementById("serverUrl").value = this.DEFAULTS.serverUrl;
+    document.getElementById("thunderstoreUrl").value =
+      this.DEFAULTS.thunderstoreUrl;
     this.checkUrlWarning(this.DEFAULTS.serverUrl);
+    this.checkThunderstoreUrlWarning(this.DEFAULTS.thunderstoreUrl);
   }
 }
 

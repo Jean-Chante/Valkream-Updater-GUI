@@ -5,7 +5,7 @@ const PathManager = require("../../shared/constants/paths.js");
 const NodeScript = require("./handlers/node-script.js");
 const ZipFolder = require("./handlers/zip-folder.js");
 const CheckForUpdates = require("./handlers/check-for-updates.js");
-const UploadFiles = require("./handlers/upload-game-files.js");
+const UploadFiles = require("./handlers/upload-files.js");
 
 const MainWindow = require("../windows/mainWindow.js");
 

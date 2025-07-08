@@ -5,8 +5,34 @@ const { showSnackbar, Process } = require(window.PathManager.getUtilsPath());
 const { database } = require(window.PathManager.getSharedUtilsPath());
 
 const fs = require("fs");
+const fsExtra = require("fs-extra");
 const axios = require("axios");
 const yaml = require("yaml");
+const { cleanGameFolder } = require("valkream-function-lib");
+
+// --- Fonctions utilitaires générales ---
+function parseVersion(version) {
+  return version.split(".").map(Number);
+}
+
+function isNewerVersion(local, remote) {
+  const [l1, l2, l3] = parseVersion(local);
+  const [r1, r2, r3] = parseVersion(remote);
+  if (l1 !== r1) return l1 > r1;
+  if (l2 !== r2) return l2 > r2;
+  return l3 > r3;
+}
+
+function writeYamlFile(filePath, data) {
+  fs.writeFileSync(filePath, yaml.stringify(data));
+}
+
+async function moveFolderAsync(src, dest) {
+  if (fs.existsSync(src)) {
+    await fsExtra.copy(src, dest);
+    await fsExtra.remove(src);
+  }
+}
 
 class BuildGamePanel {
   static id = "build-game-panel";
@@ -24,12 +50,7 @@ class BuildGamePanel {
     );
 
     // Instances Process pour chaque étape
-    this.processes = {
-      main: null,
-      config: null,
-      plugins: null,
-      final: null,
-    };
+    this.processes = {};
 
     this.db = new database();
     this.isRunning = false;
@@ -50,18 +71,6 @@ class BuildGamePanel {
     } catch (err) {
       return "0.0.0";
     }
-  }
-
-  isNewerVersion(local, remote) {
-    const localParts = local.split(".").map(Number);
-    const remoteParts = remote.split(".").map(Number);
-    return (
-      localParts[0] > remoteParts[0] ||
-      (localParts[0] === remoteParts[0] && localParts[1] > remoteParts[1]) ||
-      (localParts[0] === remoteParts[0] &&
-        localParts[1] === remoteParts[1] &&
-        localParts[2] > remoteParts[2])
-    );
   }
 
   async init() {
@@ -90,13 +99,6 @@ class BuildGamePanel {
         showSnackbar("Version invalide. Utilisez le format X.Y.Z", "error");
         return;
       }
-      if (!this.isNewerVersion(this.version, this.onlineVersion)) {
-        showSnackbar(
-          "La version locale n'est pas plus récente que celle en ligne.",
-          "error"
-        );
-        return;
-      }
       if (!fs.existsSync(path.join(this.path, "BepInEx"))) {
         showSnackbar("Le dossier BepInEx n'existe pas !", "error");
         return;
@@ -109,49 +111,78 @@ class BuildGamePanel {
     });
   }
 
+  createProcess(type, label, icon) {
+    this.processes[type] = new Process(
+      `${type}-file`,
+      this.progressContainer,
+      label,
+      icon
+    );
+  }
+
   showProgress() {
     this.progressContainer.style.display = "block";
-
-    // Créer les instances Process pour chaque étape
-    this.processes.main = new Process(
-      "main-file",
-      this.progressContainer,
-      "Dossier principal",
-      "folder"
-    );
-
-    this.processes.config = new Process(
-      "config-file",
-      this.progressContainer,
-      "Configurations",
-      "settings"
-    );
-
-    this.processes.plugins = new Process(
-      "plugins-file",
-      this.progressContainer,
-      "Plugins",
-      "extension"
-    );
-
-    this.processes.final = new Process(
-      "final-file",
-      this.progressContainer,
-      "Build final",
-      "archive"
-    );
+    this.createProcess("main", "Dossier principal", "folder");
+    this.createProcess("final", "Build final", "archive");
   }
 
   hideProgress() {
     this.progressContainer.style.display = "none";
-    // Nettoyer les processus
-    this.processes = {
-      main: null,
-      config: null,
-      plugins: null,
-      final: null,
-    };
+    this.processes = {};
     this.progressContainer.innerHTML = "";
+  }
+
+  handleZipProgress(event, data) {
+    if (this.isCancelled) return;
+    const process = this.processes[this.currentFileType];
+    if (!process) return;
+    if (data.type === "progress") {
+      process.updateProgress(
+        data.processedBytes,
+        data.totalBytes || 0,
+        data.speed || 0,
+        data.fileName
+      );
+    } else if (data.type === "complete") {
+      window.Logger.log("Zip completed:", data.filePath);
+      process.setStatus({ text: "Terminé", class: "completed" });
+    }
+  }
+
+  async zipFolderProcess(src, dest, type, progressMsg) {
+    this.currentFileType = type;
+    const proc = this.processes[type];
+    proc.setStatus({ text: "En cours", class: "active" });
+    proc.updateProgress(0, 0, 0, progressMsg);
+    await ipcRenderer.invoke("zip-folder", src, dest, BuildGamePanel.id);
+  }
+
+  async hashFolderProcess(folderPath) {
+    return await ipcRenderer.invoke("hash-folder", folderPath);
+  }
+
+  async createLatestYamlProcess(buildDir, version, configHash, pluginsHash) {
+    const localLatest = {
+      version,
+      buildDate: new Date().toISOString(),
+      hash: { config: configHash, plugins: pluginsHash },
+    };
+    writeYamlFile(path.join(buildDir, "latest.yml"), localLatest);
+  }
+
+  async zipBuildDirProcess(buildDir, uploadZipPath) {
+    this.currentFileType = "final";
+    this.processes.final.setStatus({
+      text: "En cours",
+      class: "active",
+    });
+    this.processes.final.updateProgress(0, 0, 0, "Finalisation du build...");
+    await ipcRenderer.invoke(
+      "zip-folder",
+      buildDir,
+      uploadZipPath,
+      BuildGamePanel.id
+    );
   }
 
   async executeBuildScript() {
@@ -166,6 +197,12 @@ class BuildGamePanel {
 
       this.showProgress();
 
+      ipcRenderer.removeAllListeners(`zip-folder-${BuildGamePanel.id}`);
+      ipcRenderer.on(
+        `zip-folder-${BuildGamePanel.id}`,
+        this.handleZipProgress.bind(this)
+      );
+
       // PART 2 : Get the folders to zip
       const configFolderToZip = path.join(this.path, "./BepInEx/config");
       const pluginsFolderToZip = path.join(this.path, "./BepInEx/plugins");
@@ -175,108 +212,42 @@ class BuildGamePanel {
       if (!fs.existsSync(buildDir)) fs.mkdirSync(buildDir);
 
       const ValheimValkreamDataZipFilePath = path.join(buildDir, "./game.zip");
-      const configFilePath = path.join(buildDir, "./game-config.zip");
-      const pluginsFilePath = path.join(buildDir, "./game-plugins.zip");
+
+      // === EXCLUSION TEMPORAIRE DES DOSSIERS config ET plugins ===
+      cleanGameFolder(
+        this.path,
+        require(path.join(
+          window.PathManager.getSharedPath(),
+          "constants/gameFolderToRemove.js"
+        ))
+      );
+      const tempConfig = path.join(this.appDataPath, "./temp/config");
+      const tempPlugins = path.join(this.appDataPath, "./temp/plugins");
+      await moveFolderAsync(configFolderToZip, tempConfig);
+      await moveFolderAsync(pluginsFolderToZip, tempPlugins);
 
       // PART 4 : Zip the folders with progress tracking
-      ipcRenderer.on(`zip-folder-${BuildGamePanel.id}`, (event, data) => {
-        if (this.isCancelled) return;
-
-        if (data.type === "progress") {
-          const process = this.processes[this.currentFileType];
-          if (process) {
-            process.updateProgress(
-              data.processedBytes,
-              data.totalBytes || 0,
-              data.speed || 0,
-              data.fileName
-            );
-          }
-        } else if (data.type === "complete") {
-          window.Logger.log("Zip completed:", data.filePath);
-          const process = this.processes[this.currentFileType];
-          if (process) {
-            process.setStatus({
-              text: "Terminé",
-              class: "completed",
-            });
-          }
-        }
-      });
-
-      // Zip main game folder
-      this.currentFileType = "main";
-      this.processes.main.setStatus({
-        text: "En cours",
-        class: "active",
-      });
-      this.processes.main.updateProgress(
-        0,
-        0,
-        0,
-        "Compression du dossier principal..."
-      );
-      await ipcRenderer.invoke(
-        "zip-folder",
+      await this.zipFolderProcess(
         this.path,
         ValheimValkreamDataZipFilePath,
-        BuildGamePanel.id
+        "main",
+        "Compression du dossier principal... (config/plugins exclus)"
       );
+      if (this.isCancelled) {
+        // On restaure même si annulé
+        await moveFolderAsync(tempConfig, configFolderToZip);
+        await moveFolderAsync(tempPlugins, pluginsFolderToZip);
+        return;
+      }
 
-      if (this.isCancelled) return;
-
-      // Zip config folder
-      this.currentFileType = "config";
-      this.processes.config.setStatus({
-        text: "En cours",
-        class: "active",
-      });
-      this.processes.config.updateProgress(
-        0,
-        0,
-        0,
-        "Compression des configurations..."
-      );
-      await ipcRenderer.invoke(
-        "zip-folder",
-        configFolderToZip,
-        configFilePath,
-        BuildGamePanel.id
-      );
-
-      if (this.isCancelled) return;
-
-      // Zip plugins folder
-      this.currentFileType = "plugins";
-      this.processes.plugins.setStatus({
-        text: "En cours",
-        class: "active",
-      });
-      this.processes.plugins.updateProgress(
-        0,
-        0,
-        0,
-        "Compression des plugins..."
-      );
-      await ipcRenderer.invoke(
-        "zip-folder",
-        pluginsFolderToZip,
-        pluginsFilePath,
-        BuildGamePanel.id
-      );
-
-      if (this.isCancelled) return;
+      // === RESTAURATION DES DOSSIERS config ET plugins ===
+      moveFolderSync(tempConfig, configFolderToZip);
+      moveFolderSync(tempPlugins, pluginsFolderToZip);
 
       // PART 5 : Hash the folders
       this.processes.final.updateProgress(0, 0, 0, "Calcul des hashes...");
-      const configHash = await ipcRenderer.invoke(
-        "hash-folder",
-        configFolderToZip
-      );
-      const pluginsHash = await ipcRenderer.invoke(
-        "hash-folder",
-        pluginsFolderToZip
-      );
+      const configHash = await this.hashFolderProcess(configFolderToZip);
+      const pluginsHash = await this.hashFolderProcess(pluginsFolderToZip);
 
       if (this.isCancelled) return;
 
@@ -287,30 +258,16 @@ class BuildGamePanel {
         0,
         "Création du fichier de version..."
       );
-      const localLatest = {
-        version: this.version,
-        buildDate: new Date().toISOString(),
-        hash: { config: configHash, plugins: pluginsHash },
-      };
-      fs.writeFileSync(
-        path.join(buildDir, "latest.yml"),
-        yaml.stringify(localLatest)
+      await this.createLatestYamlProcess(
+        buildDir,
+        this.version,
+        configHash,
+        pluginsHash
       );
 
       // PART 7 : Zip the build folder
-      this.currentFileType = "final";
-      this.processes.final.setStatus({
-        text: "En cours",
-        class: "active",
-      });
-      this.processes.final.updateProgress(0, 0, 0, "Finalisation du build...");
       const uploadZipPath = path.join(this.appDataPath, "./game-build.zip");
-      await ipcRenderer.invoke(
-        "zip-folder",
-        buildDir,
-        uploadZipPath,
-        BuildGamePanel.id
-      );
+      await this.zipBuildDirProcess(buildDir, uploadZipPath);
 
       if (this.isCancelled) return;
 

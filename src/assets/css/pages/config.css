@@ -60,7 +60,7 @@
   background: #3766b1;
 }
 
-#url-warning {
+.warning {
   display: none;
   background: rgb(145, 31, 31);
   border: 1px solid var(--color);

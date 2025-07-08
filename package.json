@@ -20,6 +20,7 @@
     "axios": "^1.10.0",
     "electron-updater": "^6.1.8",
     "fs": "^0.0.1-security",
+    "fs-extra": "^11.3.0",
     "node-bdd": "^2.0.4",
     "node-fetch": "^2.7.0",
     "path": "^0.12.7",
