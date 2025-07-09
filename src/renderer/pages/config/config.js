@@ -23,7 +23,8 @@ class Config {
     apiKey: "SECRET_API_KEY",
     apiToken: "SECRET_API_TOKEN",
     serverUrl: "http://localhost:3000",
-    thunderstoreUrl: "https://thunderstore.io/",
+    thunderstoreUrl:
+      "https://thunderstore.io/package/download/ValheimValkream/Valkream/2.1.11/",
   };
 
   async initializeClientConfig() {

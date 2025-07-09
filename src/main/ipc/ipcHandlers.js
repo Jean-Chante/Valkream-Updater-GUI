@@ -6,6 +6,7 @@ const NodeScript = require("./handlers/node-script.js");
 const ZipFolder = require("./handlers/zip-folder.js");
 const CheckForUpdates = require("./handlers/check-for-updates.js");
 const UploadFiles = require("./handlers/upload-files.js");
+const UnZip = require("./handlers/unZip.js");
 
 const MainWindow = require("../windows/mainWindow.js");
 
@@ -61,6 +62,14 @@ class IpcHandlers {
     );
     ipcMain.handle("cancel-zip-folder", (event, scriptName) => {
       return new ZipFolder().cancel(scriptName);
+    });
+
+    // unZip folder
+    ipcMain.handle("unzip-folder", (event, zipPath, destPath) => {
+      return new UnZip().init(event, zipPath, destPath);
+    });
+    ipcMain.handle("cancel-unzip-folder", (event, scriptName) => {
+      return new UnZip().cancel(scriptName);
     });
 
     // hash folder
